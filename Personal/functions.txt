@@ -1,0 +1,51 @@
+func showEquipped()
+  >`0,6, L: @item.left@
+  >`0,7, R: @item.right@
+
+func potionCheckMinHp(minHp)
+  ? hp < minHp
+     activate potion
+
+func potionCheckDebuffCount(maxDebuffs)
+  ? debuffs.count > maxDebuffs
+    activate potion
+
+func quickDash(rightHand)
+  ?foe.distance >= 11 & foe.distance <= 15
+    equipR dashing shield
+  :?foe.distance > 15 
+    equipR trisk
+  :
+    equipR @rightHand@
+ 
+ func quickDash2h(twoHander)
+    ?foe.distance >= 11 & foe.distance <= 15
+        equipR dashing shield
+    :?foe.distance > 15 
+        equipR trisk
+    :
+        equip @twoHander@
+
+func brewPotion(type)
+  ?loc.begin
+    ?type = healing
+      brew tar
+    ?type = vampiric
+      brew tar + bronze
+    ?type = cleansing
+      brew tar + wood
+    ?type = defensive
+      brew tar + stone
+    ?type = lightning
+      brew bronze
+    ?type = berserk
+      brew bronze + wood
+    ?type = lucky
+      brew bronze + stone
+    ?type = experience
+      brew wood
+    ?type = invisibility
+      brew wood + stone
+    ?type = strength
+      brew stone
+    

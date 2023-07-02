@@ -1,0 +1,19 @@
+?loc = caustic_caves
+  ? ! pickup & foe.distance <=20 & foe.distance > 5
+    equipL ice wand
+    equipR vigor wand
+  :? ! pickup & foe.distance < 6
+    equipL ice wand
+    equipR poison shield
+  :? ! pickup & foe.distance > 20
+    equipL trisk
+    equipR ouro
+
+  ?foe = boss
+    var BoleshX = 60
+    var BoleshY = 20
+    >`@BoleshX@,@BoleshY@,Bolesh
+    ?debuffs.count > 3
+      activate potion 
+    equipL ice wand
+    equipR vigor wand

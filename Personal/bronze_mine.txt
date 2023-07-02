@@ -1,0 +1,30 @@
+func quickDash(rightHand)
+  ?foe.distance >= 11 & foe.distance <= 15
+    equipR dashing shield
+  :?foe.distance > 15 
+    equipR trisk
+  :
+    equipR @rightHand@
+
+func quickDash2h(twoHander)
+    ?foe.distance >= 11 & foe.distance <= 15
+        equipR dashing shield
+    :?foe.distance > 15 
+        equipR trisk
+    :
+        equip @twoHander@
+
+? loc = bronze_mine
+  equipR trisk
+  ?foe = slave_master // Whip Controller 20/2 Fire/AEther
+    equipL aether hammer
+    quickDash("aether sword")
+  :?foe = fire_elemental // 10/1 Fire/AEther
+    equipL aether hammer
+    quickDash(hammer)
+  :?foe = mine_walker // 
+    equipL 4* aether hammer
+    quickDash("aether sword")
+  :?foe = fire_geyser // Flame Geyser 50/0 spawns fire_elemental
+    equipL aether wand
+    quickDash("aether hammer")

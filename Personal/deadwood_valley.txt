@@ -1,0 +1,19 @@
+?loc = deadwood_valley
+  var f = import Personal/functions
+  // Boss
+  // Xyloalgia, Residue of Leuce
+  // HP 230
+  // Damage 4
+  ?foe = flesh_scarab // Stone Scarab
+    // Resists ranged
+    equipL 6* big
+    f.quickDash("4* hammer")
+  ?foe = huge_mosquito
+    equipL 4* vigor wand
+    equipR 4* ice wand
+  ?foe = boss
+    equipL 6* big
+    f.quickDash("4* hammer")
+  ?harvest.distance < 10
+    equipL tris
+    equip hatchet
