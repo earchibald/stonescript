@@ -1,19 +1,37 @@
+var f = import Personal/functions
+
+var potionType = experience
+
 ?loc = caustic_caves
-  ? ! pickup & foe.distance <=20 & foe.distance > 5
-    equipL ice wand
-    equipR vigor wand
-  :? ! pickup & foe.distance < 6
-    equipL ice wand
-    equipR poison shield
+  f.brewPotion(potionType)
+
+  // Activate an Experience Potion just before first foe
+  ?foe.distance <= 20 & item.potion = experience
+    activate potion
+
+  :? ! pickup & foe.distance <=20 & foe.distance > 16 & loc.stars >= 5
+    equipL fire wand
+    ?potionType = experience
+      equipR experience
+    :
+      equipR vigor wand
+  :? ! pickup & foe.distance <= 17
+    equipL big ice sword
+    ?potionType = experience
+      equipR experience
+    :
+      f.quickDash("6* aether shield")
   :? ! pickup & foe.distance > 20
     equipL trisk
     equipR ouro
 
   ?foe = boss
-    var BoleshX = 60
-    var BoleshY = 20
-    >`@BoleshX@,@BoleshY@,Bolesh
-    ?debuffs.count > 3
+    f.foeTarget(none)
+    ?debuffs.count > 3 & item.potion = cleansing
       activate potion 
-    equipL ice wand
+    equipL big ice sword
     equipR vigor wand
+    ?loc.stars <= 5
+      equipL big ice sword
+      f.quickDash("fire wand")
+

@@ -1,0 +1,47 @@
+var f = import Personal/functions
+
+/*
+Temple [temple]
+Cult Sorcerer [cult_sorcerer] 20/2
+  "Always called upon to rearrange furniture"
+Cult Guard [cult_guard] 20/1/5.0 Poison/Ice
+  "Suspects this is a multi-level marketing scheme"
+Cult Marksman [cult_marksman] 20/1
+The Bell Ringer [heavy_hitter] 25/4/20.0 Poison/Ice
+  6* 80/1/20.0
+  blue 90/1/20.0
+  "An accomplished percussionist fallen on hard times."
+Poison Adept [poison_adept] 20/1 Poison/Ice
+  blue 22/1
+  "Started off with air fresheners"
+Toupée Snatcher [flying_serpent] 35/2 Poison/Ice
+  "Top of the noodle danger scale"
+Serpent Handler [serpent_handler] 80/0 Poison/Ice
+  "Is getting real tired of all the innuendo"
+  Spawns Toupée Snatcher every ???
+Worm Rider [worm_rider] 60/2/5.0 Poison/Ice
+    6* 205/2/5.0
+  "Low tunnels can be particularly challenging"
+Ground Serpent [ground_serpent] 30/1
+
+*/
+?loc = temple
+    ? ! pickup & foe.distance > 20
+        equipL trisk
+        equipR ouro
+    :?foe = boss & foe.hp < 75
+        equipL ice big sword
+        equipR experience
+    :?foe = boss
+        f.foeStateText()
+        ?foe.state = 105 | foe.state = 33
+            equipL ice big sword
+            equipR poison shield
+        ?foe.state = 112 & foe.time > 45
+            equipR mind
+        :
+            equipL ice big sword
+            f.quickDash("fire big sword")
+    :
+        equipL ice big sword
+        f.quickDash("fire big sword")

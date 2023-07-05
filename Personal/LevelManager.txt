@@ -1,3 +1,13 @@
+/*
+Like, a level manager. I think it's going to be easier to
+keep everything in a monolithic file because of namespacing
+and keeping everything up to date.
+*/
+
+/*
+Functions
+*/
+
 storage.Set("DEBUG", "true")
 
   
@@ -250,4 +260,133 @@ func brewPotion(type)
       brew wood + stone
     ?type = strength
       brew stone
-    
+
+/*
+Levels
+*/
+
+/*
+****************
+* Rocky Plateau 
+* rocky_plateau
+****************
+* Boss Data
+*
+****************
+* Foes Data
+*
+****************
+*/
+//?loc = rocky_plateau
+
+// ... and the other levels as they migrate
+
+/*
+Main loop
+*/
+//
+
+// ... doing last first from UI
+// Show monster data better
+import UI/BetterInfo2
+
+// First I should use items with a cast
+//  duration to avoid interrupted casting
+var USE_SKELETON_ARM = false
+var USE_BARDICHE = true
+var USE_FISSURE_STONE = true
+var USE_EXPERIENCE_STONE = true
+var USE_BLADE = true
+
+  
+?foe = boss | foe = ice_wall
+  ?USE_SKELETON_ARM = true
+    ?item.GetCooldown(skeleton_arm) = 0 |
+    ^ item.GetCooldown(skeleton_arm) > 1320
+      equip skeleton arm
+      ?item.CanActivate(skeleton_arm)
+        activate R
+  ?USE_BARDICHE
+    var bCD
+    bCD = item.GetCooldown(＂bardiche＂)
+    ?foe.distance < 10 & bCD <= 0 | bCD > 870
+      equip bardiche
+      activate R
+      >`0,14,#green,Bardiche: ATTACKING
+    :?bCD > 0 & bCD <= 870
+      >`0,14,#yellow,Bardiche: @bCD@/900
+    :?foe.distance >= 10
+      >`0,14,#red,Bardiche: out of range    
+  ?USE_FISSURE_STONE
+    var fsCooldown = 540
+    ?fsCooldown <= 0 & foe.distance <= 18
+      equipR fissure
+      fsCooldown = 540
+    :?fsCooldown > 480 & fsCooldown <= 540
+      >`0,15,#green,Fissure Stone: Equip
+      fsCooldown--
+    :?fsCooldown <= 0 & foe.distance > 18
+      >`0,15,#red,Fissure Stone: out of range
+    :
+      fsCooldown--
+      >`0,15,#yellow,Fissure Stone:
+      ^@fsCooldown@/540
+      fsCooldown--
+?USE_BLADE
+  var blCD
+  var foeCount
+  foeCount = foe.count
+  blCD = item.GetCooldown(＂blade＂)
+  ?(blCD <= 30 | blCD > 2370)
+  ^& foeCount > 3
+  ^& foe.distance <= 11
+    >`0,16,#green,Blade: Using @foeCount@
+  ?(blCD <= 0 | blCD > 2370)
+  ^& foeCount > 3
+  ^& foe.distance <= 11
+    >`0,16,#green,Blade: Using @foeCount@
+    equip blade
+    activate R
+//  :
+//    >`0,16,#yellow,Blade: @blCD@/2400  
+
+
+
+
+var USE_POTION_HEALING = True
+var USE_POTION_VAMPIRIC
+var USE_POTION_CLEANSING
+var USE_POTION_DEFENSIVE
+var USE_POTION_LIGHTNING
+?USE_POTION_HEALING
+  brewPotion(healing)
+  potionCheckMinHp(7)
+  
+?item.potion = experience
+  ?foe = boss
+    activate potion
+
+// HUD activation icons
+disable hud a
+
+
+potionCheckDebuffCount(3)
+showEquippedShort()
+foeShortName(0,-2)
+foeTarget(arrow)
+pickupCheck()
+
+import Personal/deadwood_valley
+import Personal/icy_ridge
+import Personal/caustic_caves
+import Personal/bronze_mine
+import Personal/fungus_forest
+import Personal/undead_crypt
+import Personal/rocky_plateau
+import Personal/temple
+
+>`0,21,#red,@foe.debuffs.string@
+>`0,22,#green,@foe.buffs.string@
+>`0,23,--------------------------------
+>`0,24,#red,@debuffs.string@
+>`0,25,#green,@buffs.string@

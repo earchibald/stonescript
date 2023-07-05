@@ -1,29 +1,14 @@
+var f = import Personal/functions
+
 ?loc = icy_ridge
-  // Enemies
-  // 3 Stars
-  // Ki Eater 70/1 Ice/Fire
-  //  Steals @1 each time it attacks.
-  // Ice Elemental 9/1 Ice/Fire (Elite: 10/4)
-  //  They're losing their cool over you
-  // Ki Gobbler 150/3 Ice/Fire
-  //  Steals @1 each time it attacks.
-  // Ice Pillar 1284/0 Ice/Fire
-  //  Melts, losing 50 hitpoints per second.
-  //  NOTE: Spawns Ice Elementals!
-
-  // 4 Stars
-  // Ki Slurper 120/1 Ice/Fire
-  //  Applies a chill debuff and steals @1 each time
-  //  it attacks.
-  // Boss
-  // Hrímnir 1800/1/200.0 Ice/Fire
-  //  Immune to Damage Penalty
-
-    ? ! foe
-      equipL trisk
-      equipR ouro
-    ?foe = ice
-      equipL fire wand
-    ?foe = boss
-      equipR ice shield
+    ? ! foe | foe.distance >= 30
+        equipL trisk
+        equipR ouro
+    :?foe = boss
+        f.foeStateText()
+        equipL poison sword
+        f.quickDash("fire shield")
+    : // any foe
+        equipL poison sword
+        f.quickDash("big sword")
     

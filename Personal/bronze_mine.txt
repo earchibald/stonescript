@@ -1,30 +1,36 @@
-func quickDash(rightHand)
-  ?foe.distance >= 11 & foe.distance <= 15
-    equipR dashing shield
-  :?foe.distance > 15 
-    equipR trisk
-  :
-    equipR @rightHand@
+var f = import Personal/functions
 
-func quickDash2h(twoHander)
-    ?foe.distance >= 11 & foe.distance <= 15
-        equipR dashing shield
-    :?foe.distance > 15 
-        equipR trisk
-    :
-        equip @twoHander@
+var ppTimer = 0
 
 ? loc = bronze_mine
-  equipR trisk
-  ?foe = slave_master // Whip Controller 20/2 Fire/AEther
-    equipL aether hammer
-    quickDash("aether sword")
-  :?foe = fire_elemental // 10/1 Fire/AEther
-    equipL aether hammer
-    quickDash(hammer)
-  :?foe = mine_walker // 
-    equipL 4* aether hammer
-    quickDash("aether sword")
-  :?foe = fire_geyser // Flame Geyser 50/0 spawns fire_elemental
-    equipL aether wand
-    quickDash("aether hammer")
+    f.foeStateText()
+    equipR trisk
+    ?foe = slave_master // Whip Controller 20/2 Fire/AEther
+        equipL aether wand
+        f.quickDash("aether shield")
+    :?foe = fire_elemental // 10/1 Fire/AEther
+        equipL aether wand
+        f.quickDash("aether shield")
+    :?foe = mine_walker | foe = dominotaur // 
+        equipL aether wand
+        f.quickDash("big fire sword")
+    :?foe = fire_geyser // Flame Geyser 50/0 spawns fire_elemental
+        equipL aether wand
+        f.quickDash("aether hammer")
+    :?foe = boss
+        f.foeStateText()
+        ?foe.state = 1
+            equipL aether wand
+            equipR ouro
+        :?foe.state = 2
+            equipL aether wand
+            equipR vigor wand
+        :?foe.state = 32
+            equipL aether wand
+            equipR aether shield
+        :?foe.state = 33
+            equipL aether wand
+            f.quickDash("big fire sword")
+            ?foe.time > 180
+                equipL aether wand
+                equipR vigor wand

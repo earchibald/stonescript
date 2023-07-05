@@ -1,0 +1,36 @@
+var f = import Personal/functions
+
+var potionType =  defensive
+
+?loc = undead_crypt | loc = wildride
+    f.brewPotion(potionType)
+
+  ?pickup = treasure
+    activate potion
+  ? ! pickup & foe.distance > 20
+    equipL trisk
+    equipR ouro
+  :?foe = boss
+    f.foeStateText()
+    ?foe.state = 32
+    ^ | (foe.state = 33 & foe.time >= 210)
+    ^ | (foe.state = 2 & foe.time >= 270)
+    ^ | (foe.state = 33 & foe = phase2 )
+      equipL vigor wand
+      equipR aether shield
+    :
+      equipL vigor wand
+      f.quickDash("big ice sword")
+    >`0,7,@foe@
+    ?foe = phase2
+      equipL big ice sword
+      f.quickDash("fire wand")
+  :?foe = skeleton
+    equipL big ice sword
+    f.quickDash("fire wand")
+  :?foe = ghost
+    equipL vigor wand
+    equipR aether wand
+    
+    
+  
