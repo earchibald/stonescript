@@ -1,22 +1,19 @@
-?loc = fungus_forest
-  var eaFuncs = import Personal/functions
-
-  eaFuncs.brewPotion(healing)
-
-  ?foe.distance < 16
-    equipL poison wand
-    ?hp < maxhp
-      equipR 4* vigor wand
-    :
-      equipR fire wand
-  :
-    equipL ouro
-    equipR trisk
-  ?foe = boss
-    ?foe.armor > 0
-      equipR aether hammer
-    :
-      equipR poison sword
-    ?foe.state = 32 | foe.state = 33
-      eaFuncs.quickDash("dashing shield")
-  
+func run(manager)
+    ?loc = fungus_forest
+        ?foe.distance < 16
+            equipL poison sword
+            equipR poison heavy crossbow
+        :
+            equipL ouro
+            equipR trisk
+        ?foe = boss
+            equipL poison sword
+            ?foe.armor > 0
+                equipR aether hammer
+            :
+                equipR poison heavy crossbow
+            ?foe.state = 32 & foe.time > 25
+                equip mind
+            :?foe.state = 33    
+                manager.quickDash("poison heavy crossbow")
+        

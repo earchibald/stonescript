@@ -139,8 +139,6 @@ func foeStateText()
     ?foe = yeti
         stateText = "something yeti A 35?"
         stateDuration = 35
-        ?foe.time > 30 & foe.time < stateDuration
-            loc.pause()
   :?foe.state = 133
     ?foe = yeti
         stateText = "Yeti Blowing Backwards"
@@ -149,8 +147,6 @@ func foeStateText()
     ?foe = yeti
         stateText = "Yeti B"
         stateDuration = 85
-        ?foe.time > 83 & foe.time < stateDuration
-            loc.pause()
   :?foe.state = 143
     ?foe = yeti
         stateText = "Yeti Summon Ice Wall"

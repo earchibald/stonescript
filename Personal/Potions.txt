@@ -1,0 +1,7 @@
+var DEFAULT_POTION = "healing"
+
+func setPotion(thePotion)
+    storage.Set("DEFAULT_POTION",thePotion)
+
+func getPotion()
+    return storage.Get("DEFAULT_POTION",DEFAULT_POTION)

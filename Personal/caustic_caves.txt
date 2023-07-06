@@ -1,37 +1,32 @@
-var f = import Personal/functions
+func run(manager)
+  ?loc = caustic_caves
+    // Activate an Experience Potion just before first foe
+    ?foe.distance <= 20 & item.potion = experience
+      activate potion
 
-var potionType = experience
-
-?loc = caustic_caves
-  f.brewPotion(potionType)
-
-  // Activate an Experience Potion just before first foe
-  ?foe.distance <= 20 & item.potion = experience
-    activate potion
-
-  :? ! pickup & foe.distance <=20 & foe.distance > 16 & loc.stars >= 5
-    equipL fire wand
-    ?potionType = experience
-      equipR experience
-    :
-      equipR vigor wand
-  :? ! pickup & foe.distance <= 17
-    equipL big ice sword
-    ?potionType = experience
-      equipR experience
-    :
-      f.quickDash("6* aether shield")
-  :? ! pickup & foe.distance > 20
-    equipL trisk
-    equipR ouro
-
-  ?foe = boss
-    f.foeTarget(none)
-    ?debuffs.count > 3 & item.potion = cleansing
-      activate potion 
-    equipL big ice sword
-    equipR vigor wand
-    ?loc.stars <= 5
+    :? ! pickup & foe.distance <=20 & foe.distance > 16 & loc.stars >= 5
+      equipL fire wand
+      ?potionType = experience
+        equipR experience
+      :
+        equipR vigor wand
+    :? ! pickup & foe.distance <= 17
       equipL big ice sword
-      f.quickDash("fire wand")
+      ?potionType = experience
+        equipR experience
+      :
+        manager.quickDash("6* aether shield")
+    :? ! pickup & foe.distance > 20
+      equipL trisk
+      equipR ouro
+
+    ?foe = boss
+      manager.foeTarget(none)
+      ?debuffs.count > 3 & item.potion = cleansing
+        activate potion 
+      equipL big ice sword
+      equipR vigor wand
+      ?loc.stars <= 5
+        equipL big ice sword
+        manager.quickDash("fire wand")
 

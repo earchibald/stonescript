@@ -1,22 +1,20 @@
-?loc = deadwood_valley
-  var f = import Personal/functions
-  // Boss
-  // Xyloalgia, Residue of Leuce
-  // HP 230
-  // Damage 4
-  ?foe = flesh_scarab // Stone Scarab
-    // Resists ranged
-    equipL 6* big
-    f.quickDash("4* hammer")
-  ?foe = huge_mosquito & foe.distance <= 20 // typical wand distance
-    equipL 4* vigor wand
-    equipR 4* ice wand
-  ?foe = boss & foe.distance <= 30
-    equipL 6* big
-    f.quickDash("4* hammer")
-    equip skeleton arm
-  /*
-  ?harvest.distance < 10
-    equipL tris
-    equip hatchet
-  */
+func run(manager)
+  ?loc = deadwood_valley
+    // Boss
+    // Xyloalgia, Residue of Leuce
+    // HP 230
+    // Damage 4
+    ?foe = flesh_scarab // Stone Scarab
+      // Resists ranged
+      equipL big ice
+      manager.quickDash("big fire")
+    ?foe = huge_mosquito & foe.distance <= 20 // typical wand distance
+      equipL vigor wand
+      equipR ice wand
+    ?foe = boss & foe.distance <= 30
+      manager.foeStateText()
+      equipL big ice
+      manager.quickDash("big fire")
+    // ?harvest.distance < 10
+    //   equipL tris
+    //   equip hatchet

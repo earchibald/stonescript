@@ -1,14 +1,13 @@
-var f = import Personal/functions
-
-?loc = icy_ridge
-    ? ! foe | foe.distance >= 30
-        equipL trisk
-        equipR ouro
-    :?foe = boss
-        f.foeStateText()
-        equipL poison sword
-        f.quickDash("fire shield")
-    : // any foe
-        equipL poison sword
-        f.quickDash("big sword")
-    
+func run(manager)
+    ?loc = icy_ridge
+        ? ! foe | foe.distance >= 30
+            equipL trisk
+            equipR ouro
+        :?foe = boss
+            manager.foeStateText()
+            equipL poison sword
+            manager.quickDash("fire shield")
+        : // any foe
+            equipL poison sword
+            manager.quickDash("big sword")
+        

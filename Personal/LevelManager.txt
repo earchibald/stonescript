@@ -4,187 +4,169 @@ keep everything in a monolithic file because of namespacing
 and keeping everything up to date.
 */
 
+
+
+
 /*
 Functions
 */
 
-storage.Set("DEBUG", "true")
+var Ptns = import Personal/Potions
 
-  
-func showEquipped()
-  var lItem = item.left.id
+func init()
+    storage.Set("DEBUG", false)
+    storage.Set("POTION","healing")
+
+    Ptns.setPotion("healing")
+    // Potions.brewPotion()
+
+
+var lItem
+func leftEquipped()
+  lItem = item.left.id
   var lActivateIcon = ＂ ＂
   lActivateIcon = ＂*＂
-  >`0,6,@lActivateIcon@ L: @lItem@
-  var rItem = item.right.id
+  lItem = lActivateIcon + "L: " + lItem
+
+var rItem
+func rightEquipped()
+  rItem = item.right.id
   var rActivateIcon = ＂ ＂
   var rCoolDown
   rCoolDown = item.GetCooldown(@rItem@)
   ?rCoolDown = 0
     rActivateIcon = ＂*＂
-  >`0,7,@rActivateIcon@ R: @rItem@
-  ?item.potion ! "Empty"
-    >`0,8,Q P: @item.potion@
-  :
-    >`0,8,  P: Empty - was ??? to be written
+  rItem = @rActivateIcon@ + "R: "+ @rItem@
 
-func showEquippedShort()
+func leftEquippedShort ()
   var leftWords = []
   ?item.left
     leftWords = string.Split(item.left)
-    >`1,2,L: @leftWords[0]@ @leftWords[1]@
+    lItem = "L: " + leftWords[0] + " " + leftWords[1]
+
+func rightEquippedShort ()
   var rightWords = []
   ?item.right
     rightWords = string.Split(item.right)
-    >`1,3,R: @rightWords[0]@ @rightWords[1]@
-  >`1,4,P: @item.potion@
+    rItem = "R: " + rightWords[0] + " " + rightWords[1]
+
+func potionsCanMake(costA,costB)
+    var A
+    var B
+    ?costA = tar & costB = tar
+        return res.tar / 20
+    :?costA = tar
+        A = res.tar / 10
+    :?costB = tar
+        B = res.tar / 10
+    ?costA = bronze & costB = bronze
+        return res.bronze / 20
+    :?costA = bronze
+        A = res.bronze / 10
+    :?costB = bronze
+        B = res.bronze / 10
+    ?costA = wood & costB = wood
+        return res.wood / 20
+    :?costA = wood
+        A = res.wood / 10
+    :?costB = wood
+        B = res.wood / 10
+    ?costA = stone & costB = stone
+        return res.stone / 20
+    :?costA = stone
+        A = res.stone / 10
+    :?costB = stone
+        B = res.stone / 10
+    return math.Min(A,B)
 
 
-func foeStateText()
-  var stateText = " "
-  var stateDuration
-  stateDuration = 0
-  ?foe.state < 0
-    stateText = ＂No Foe＂
-  :?foe.state = 0
-    stateText = ＂Sleep＂
-  :?foe.state = 1
-    stateText = ＂Alert＂
-  :?foe.state = 2
-    stateText = ＂Waiting＂
-  :?foe.state = 4
-    stateText = ＂Dying＂
-  :?foe.state = 32
-    stateText = ＂Readying Attack＂
-    ?foe = nagaraja
-        stateDuration = 60
-    :?foe = yeti
-        stateDuration = 30
-  :?foe.state = 33
-    stateText = ＂Attacking＂
-    ?foe = nagaraja
-        stateDuration = 60
-    ?foe = yeti
-        stateDuration = 30
-  :?foe.state = 100
-    stateText = "Approaching Dysangelos"
-  :?foe.state = 101
-    ?foe = dysangelos
-        stateText = "Nearing Dysangelos"
-    :?foe = nagaraja
-        stateText = "Nagaraja Waiting Before Attack"
-        stateDuration = 125
-  :?foe.state = 102
-    ?foe = dysangelos
-        stateText = "Dysangelos Discussion"
-    :?foe = nagaraja
-        stateText = "Nagaraja Readying Tongue Attack"
-        stateDuration = 100
-  :?foe.state = 103
-    ?foe = nagaraja
-        stateText = "Nagaraja Tongue Reaching"
-        stateDuration = 90
-  :?foe.state = 104
-    ?foe = nagaraja
-        stateText = "Nagaraja Tongue Latching"
-        stateDuration = 20
-  :?foe.state = 105
-    ?foe = nagaraja
-        stateText = "Nagaraja Tongue Attack (var timing)"
-  :?foe.state = 106
-    // Dysangelos - phase 3, switching to shielding form?
-    stateText = "Armor Form" // adds 300 armor
-  :?foe.state = 107 & foe = phase3
-    // Dysangelos uses it to leave shield form? maybe
-    stateText = "Armor Form Idle"
-    stateDuration = 300
-  :?foe.state = 107 // Dysangelos
-    stateText = "Phase 2 End"
-  :?foe.state = 108
-    ?foe = dysangelos
-        stateText = "Phase 3 Start"
-        // also transitioning back out of Armor Form Idle?
-    :?foe = nagaraja
-        stateText = "Nagaraja Post Tongue Attack"
-        stateDuration = 60
-  :?foe.state = 109
-    stateText = "Power Attack Start"
-    stateDuration = 60
-  :?foe.state = 110
-    stateText = "Power Attack Charging"
-    stateDuration = 15
-  :?foe.state = 111
-    stateText = "Power Attack Eye Opening"
-    stateDuration = 90
-  :?foe.state = 112
-    ?foe = dysangelos
-        stateText = "Power Orb Forming"
-        stateDuration = 85
-    :?foe = nagaraja
-        stateText = "Thrashing About (10 dmg at 60t)"
-        stateDuration = 110
-  :?foe.state = 113
-    ?foe = dysangelos
-        stateText = "Power Orb Left"
-        stateDuration = 45
-    :?foe = nagaraja
-        stateText = "Dying"
-        stateDuration = 70
-  :?foe.state = 114
-    stateText = "Power Orb Right"
-    stateDuration = 45
-  :?foe.state = 115
-    stateText = "Power Orb Attack at 75t"
-    stateDuration = 90
-  :?foe.state = 116
-    stateText = "Phase 3 End"
-  :?foe.state = 117
-    stateText = "Dysangelos Pre A"
-  :?foe.state = 118
-    stateText = "Dysangelos Pre B"
-    stateDuration = 30
-  :?foe.state = 124  // Dysangelos
-    stateText = "Phase 1 End"
-  :?foe.state = 132
-    ?foe = yeti
-        stateText = "something yeti A 35?"
-        stateDuration = 35
-        ?foe.time > 30 & foe.time < stateDuration
-            loc.pause()
-  :?foe.state = 133
-    ?foe = yeti
-        stateText = "Yeti Blowing Backwards"
-        stateDuration = 95
-  :?foe.state = 142
-    ?foe = yeti
-        stateText = "Yeti B"
-        stateDuration = 85
-        ?foe.time > 83 & foe.time < stateDuration
-            loc.pause()
-  :?foe.state = 143
-    ?foe = yeti
-        stateText = "Yeti Summon Ice Wall"
-        stateDuration = 60
-  :
-    stateText = ＂Unknown＂
-    ?foe.distance < 50
-      loc.pause()
-  ?stateDuration > 0
-      stateText = foe.state + ": " + stateText + ＂ (" + foe.time + "/" + stateDuration + ")"
-  :
-      stateText = foe.state + ": " + stateText + ＂ (" + foe.time + ")"
-  > @stateText@
+
+var potionItem
+var thePotion = ""
+var potionCostA
+var potionCostB
+func potionEquipped()
+    ?thePotion = ""
+        thePotion = item.potion
+    ?item.potion = healing
+        potionCostA = "tar"
+        potionCostB = "tar"
+        potionItem = "Healing"
+    :?item.potion = vampiric
+        potionCostA = "tar"
+        potionCostB = "bronze"
+        potionItem = "Vampiric"
+    :?item.potion = cleansing
+        potionCostA = "tar"
+        potionCostB = "wood"
+        potionItem = "Cleansing"
+    :?item.potion = defensive
+        potionCostA = "tar"
+        potionCostB = "stone"
+    :?  item.potion = empty
+        potionItem = "P: Empty (was " + thePotion + ")"
+    ?string.Size(potionCostA) + string.Size(potionCostB) = 0     
+        potionItem = "P: in progress, add this potion to code"
+    :
+        potionItem = "P: " + potionItem + " Potion (" + potionsCanMake(potionCostA,potionCostB) + ")"
+
+var eP
+var theText
+func showEquipped(type)
+    ?loc.begin | loc.loop
+        eP = ui.AddPanel()
+        eP.anchor = top_left
+        eP.dock   = top_left
+        eP.y = 1
+        eP.h = 5
+        ?type = long
+            leftEquipped()
+            rightEquipped()
+            potionEquipped()
+        :?type = short
+            leftEquippedShort()
+            rightEquippedShort()
+            potionEquipped()
+        eP.w = math.Max(string.Size(lItem),math.Max(string.Size(rItem), string.Size(potionItem))) + 4
+        theText = ui.AddText()
+        theText.text = lItem + "\n" + rItem + "\n" + potionItem
+        theText.anchor = top_left
+        theText.dock = top_left
+        theText.x = 2
+        theText.y = 1
+        theText.h = theText.lines.Count() + 1
+        theText.w = math.Max(string.Size(lItem),math.Max(string.Size(rItem), string.Size(potionItem)))
+        eP.Add(theText)
+    :
+        ?type = long
+            leftEquipped()
+            rightEquipped()
+            potionEquipped()
+        :?type = short
+            leftEquippedShort()
+            rightEquippedShort()
+            potionEquipped()
+        theText.text = lItem + "\n" + rItem + "\n" + potionItem
+        theText.w = math.Max(string.Size(lItem),math.Max(string.Size(rItem), string.Size(potionItem)))
+        eP.w = theText.w + 4
+        eP.Add(theText)
+    ?key = primaryBegin
+        ?eP.visible
+            eP.visible = false
+        :
+            eP.visible = true
 
 func foeName(X,Y)
   ?foe
     >f@X@,@Y@,@foe.name@
 
 func foeShortName(X,Y)
-  ?foe
-    var nameWords = string.Split(foe.name," ",",")
-    ?nameWords.Count() = 1
-      nameWords.Add("")
-    >f@X@,@Y@,@nameWords[0]@ @nameWords[1]@
+    var nameWords
+    ?foe
+        nameWords = string.Split(foe.name,",")
+        ?storage.Get("DEBUG")
+            >`0,0,#red,@foe.name@
+        >f@X@,@Y@,@nameWords[0]@
 
 func foeTarget(type)
   ?foe.distance <= 20
@@ -282,111 +264,121 @@ Levels
 // ... and the other levels as they migrate
 
 /*
-Main loop
+Settings
 */
-//
-
-// ... doing last first from UI
-// Show monster data better
-import UI/BetterInfo2
-
-// First I should use items with a cast
-//  duration to avoid interrupted casting
 var USE_SKELETON_ARM = false
 var USE_BARDICHE = true
 var USE_FISSURE_STONE = true
 var USE_EXPERIENCE_STONE = true
 var USE_BLADE = true
+var BLADE_MIN_FOES = 3
+var BLADE_MAX_FOES = 6
 
-  
-?foe = boss | foe = ice_wall
-  ?USE_SKELETON_ARM = true
-    ?item.GetCooldown(skeleton_arm) = 0 |
-    ^ item.GetCooldown(skeleton_arm) > 1320
-      equip skeleton arm
-      ?item.CanActivate(skeleton_arm)
+/*
+Main loop
+*/
+//
+
+func useBlade(minFoes,maxFoes)
+    var blCD
+    var foeCount
+    foeCount = foe.count
+    blCD = item.GetCooldown(＂blade＂)
+    // ?(blCD <= 0 | blCD > 2370) & ((foeCount > minFoes & foe.distance <= 11) | foeCount >= maxFoes)
+    ?(blCD <= 0) & ((foeCount > minFoes & foe.distance <= 11) | foeCount >= maxFoes)
+        equip blade
         activate R
-  ?USE_BARDICHE
+
+func useFissureStone()
+    var fsCooldown = 540
+    ?fsCooldown <= 0 & foe.distance <= 18
+        equipR fissure
+        fsCooldown = 540
+    :?fsCooldown > 480 & fsCooldown <= 540
+        >`0,15,#green,Fissure Stone: Equip
+        fsCooldown--
+    :?fsCooldown <= 0 & foe.distance > 18
+        >`0,15,#red,Fissure Stone: out of range
+    :
+        fsCooldown--
+        >`0,15,#yellow,Fissure Stone:
+        ^@fsCooldown@/540
+        fsCooldown--
+
+func useBardiche()
     var bCD
     bCD = item.GetCooldown(＂bardiche＂)
     ?foe.distance < 10 & bCD <= 0 | bCD > 870
-      equip bardiche
-      activate R
-      >`0,14,#green,Bardiche: ATTACKING
+        equip bardiche
+        activate R
+        >`0,14,#green,Bardiche: ATTACKING
     :?bCD > 0 & bCD <= 870
-      >`0,14,#yellow,Bardiche: @bCD@/900
+        >`0,14,#yellow,Bardiche: @bCD@/900
     :?foe.distance >= 10
-      >`0,14,#red,Bardiche: out of range    
-  ?USE_FISSURE_STONE
-    var fsCooldown = 540
-    ?fsCooldown <= 0 & foe.distance <= 18
-      equipR fissure
-      fsCooldown = 540
-    :?fsCooldown > 480 & fsCooldown <= 540
-      >`0,15,#green,Fissure Stone: Equip
-      fsCooldown--
-    :?fsCooldown <= 0 & foe.distance > 18
-      >`0,15,#red,Fissure Stone: out of range
+        >`0,14,#red,Bardiche: out of range
+
+func useSkeletonArm()
+    ?item.GetCooldown(skeleton_arm) = 0 |
+    ^ item.GetCooldown(skeleton_arm) > 1320
+            equip skeleton arm
+            ?item.CanActivate(skeleton_arm)
+                    activate R
+
+func manager(mgr)
+    // Disable HUD activation icons
+    disable hud afr
+
+    // Show monster data better
+    import UI/BetterInfo2
+
+
+    // First use items with a cast duration
+    // to avoid interrupted casting
+    ?foe = boss | foe = ice_wall
+        ?USE_SKELETON_ARM = true
+            useSkeletonArm()
+        ?USE_BARDICHE
+            useBardiche()
+        ?USE_FISSURE_STONE
+            useFissureStone()
+    ?USE_BLADE
+        useBlade(BLADE_MIN_FOES,BLADE_MAX_FOES)
+
+    // foeStateText()
+    potionCheckMinHp(7)
+    potionCheckDebuffCount(3)
+    showEquipped(short)
+    foeShortName(0,-2)
+    foeTarget(arrow)
+    pickupCheck()
+    
+
+    // our level "class" pointer
+    var lvl
+    ?loc = rocky_plateau                       // Rocky Plateau
+        lvl = import Personal/rocky_plateau
+    :?loc = deadwood_valley                    // Deadwood Canyon
+        lvl = import Personal/deadwood_valley
+    :?loc = caustic_caves                      // Caves of Fear
+        lvl = import Personal/caustic_caves
+    :?loc = fungus_forest                      // Mushroom Forest
+        lvl = import Personal/fungus_forest
+    :?loc = undead_crypt                       // Haunted Halls
+        lvl = import Personal/undead_crypt
+    :?loc = bronze_mine                        // Boiling Mine
+        lvl = import Personal/bronze_mine
+    :?loc = icy_ridge                          // Icy Ridge
+        lvl = import Personal/icy_ridge
+    :?loc = temple                             // Temple
+        lvl = import Personal/temple
     :
-      fsCooldown--
-      >`0,15,#yellow,Fissure Stone:
-      ^@fsCooldown@/540
-      fsCooldown--
-?USE_BLADE
-  var blCD
-  var foeCount
-  foeCount = foe.count
-  blCD = item.GetCooldown(＂blade＂)
-  ?(blCD <= 30 | blCD > 2370)
-  ^& foeCount > 3
-  ^& foe.distance <= 11
-    >`0,16,#green,Blade: Using @foeCount@
-  ?(blCD <= 0 | blCD > 2370)
-  ^& foeCount > 3
-  ^& foe.distance <= 11
-    >`0,16,#green,Blade: Using @foeCount@
-    equip blade
-    activate R
-//  :
-//    >`0,16,#yellow,Blade: @blCD@/2400  
+        >`0,0,#red,UNKNOWN LEVEL!
+    ?lvl
+        lvl.run(mgr)
 
+    // >`0,21,#red,@foe.debuffs.string@
+    // >`0,22,#green,@foe.buffs.string@
+    // >`0,23,--------------------------------
+    // >`0,24,#red,@debuffs.string@
+    // >`0,25,#green,@buffs.string@
 
-
-
-var USE_POTION_HEALING = True
-var USE_POTION_VAMPIRIC
-var USE_POTION_CLEANSING
-var USE_POTION_DEFENSIVE
-var USE_POTION_LIGHTNING
-?USE_POTION_HEALING
-  brewPotion(healing)
-  potionCheckMinHp(7)
-  
-?item.potion = experience
-  ?foe = boss
-    activate potion
-
-// HUD activation icons
-disable hud a
-
-
-potionCheckDebuffCount(3)
-showEquippedShort()
-foeShortName(0,-2)
-foeTarget(arrow)
-pickupCheck()
-
-import Personal/deadwood_valley
-import Personal/icy_ridge
-import Personal/caustic_caves
-import Personal/bronze_mine
-import Personal/fungus_forest
-import Personal/undead_crypt
-import Personal/rocky_plateau
-import Personal/temple
-
->`0,21,#red,@foe.debuffs.string@
->`0,22,#green,@foe.buffs.string@
->`0,23,--------------------------------
->`0,24,#red,@debuffs.string@
->`0,25,#green,@buffs.string@

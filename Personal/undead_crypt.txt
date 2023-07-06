@@ -1,36 +1,47 @@
-var f = import Personal/functions
-
-var potionType =  defensive
-
-?loc = undead_crypt | loc = wildride
-    f.brewPotion(potionType)
-
-  ?pickup = treasure
-    activate potion
-  ? ! pickup & foe.distance > 20
-    equipL trisk
-    equipR ouro
-  :?foe = boss
-    f.foeStateText()
-    ?foe.state = 32
-    ^ | (foe.state = 33 & foe.time >= 210)
-    ^ | (foe.state = 2 & foe.time >= 270)
-    ^ | (foe.state = 33 & foe = phase2 )
-      equipL vigor wand
-      equipR aether shield
-    :
-      equipL vigor wand
-      f.quickDash("big ice sword")
-    >`0,7,@foe@
-    ?foe = phase2
-      equipL big ice sword
-      f.quickDash("fire wand")
-  :?foe = skeleton
-    equipL big ice sword
-    f.quickDash("fire wand")
-  :?foe = ghost
-    equipL vigor wand
-    equipR aether wand
-    
-    
-  
+func run(manager)
+    var maxFoeDistanceForWand = 16
+    ? ! pickup & foe.distance > 20
+        equipL trisk
+        equipR ouro
+    :?foe = boss
+        ?foe.state = 32
+        ^ | (foe.state = 33 & foe.time >= 210)
+        ^ | (foe.state = 2 & foe.time >= 270)
+        ^ | (foe.state = 33 & foe = phase2 )
+            ?buffs.string = smite
+                equipL big ice sword
+                equipR poison sword
+            :
+                equipL vigor wand
+                equipR vigor sword
+        :?foe.state = 33 & foe.time < 15
+            equipr aether shield
+        :?foe = phase2
+            ?buffs.string = smite
+                equipL big ice sword
+                equipR poison sword
+            :
+                equipL vigor wand
+                manager.quickDash("vigor sword")
+        :
+            ?buffs.string = smite
+                equipL big ice sword
+                equipR poison sword
+            :
+                equipL vigor wand
+                manager.quickDash("vigor sword")
+    :?foe = skeleton
+        equipL vigor wand
+        ?foe.distance > maxFoeDistanceForWand
+            equipR aether wand
+        :
+            manager.quickDash("vigor sword")
+    :?foe = large_ghost
+        equipL vigor wand
+        equipR aether wand
+    :?foe = ghost
+        equipL vigor wand
+        ?foe.distance > maxFoeDistanceForWand
+            equipR aether wand
+        :
+            manager.quickDash("vigor sword")

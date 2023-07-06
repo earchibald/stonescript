@@ -1,38 +1,36 @@
-var f = import Personal/functions
-
-?loc = rocky_plateau
-  f.foeStateText()
-  ?pickup = treasure
-    activate potion
-  ? ! pickup & foe.distance > 20
-    equipL trisk
-    equipR ouro
-  :?foe = boss
-    ?foe = phase1
-      equipL fire wand
-      equipR fire sword
-    :?foe = phase2
-      ?foe = vigor
-        equipL poison sword
-        equipR vigor shield
-      :?foe = aether
-        equipL vigor wand
-        equipR aether shield
-      :?foe = fire
-        equipL aether sword
-        equipR fire shield
-      :?foe = ice
-        equipL fire wand
-        equipR ice shield
-      :?foe = poison
-        equipL ice sword
-        equipR poison shield
-    :?foe = phase3
-      equipL big sword
-      equipR poison sword
-      ?foe.armor > 25
-        equipR aether hammer
-      ?foe.state = 115 & foe.time >= 45
-        equip mind
+func run(manager)
+    ?loc = rocky_plateau
+        ?pickup = treasure
+            activate potion
+        ? ! pickup & foe.distance > 20
+            equipL trisk
+            equipR ouro
+        :?foe = boss
+            ?foe = phase1
+                equipL fire wand
+                equipR fire sword
+            :?foe = phase2
+                ?foe = vigor
+                    equipL poison sword
+                    equipR poison heavy crossbow
+                :?foe = aether
+                    equipL vigor wand
+                    equipR aether shield
+                :?foe = fire
+                    equipL aether sword
+                    equipR fire shield
+                :?foe = ice
+                    equipL fire wand
+                    equipR ice shield
+                :?foe = poison
+                    equipL ice sword
+                    equipR poison shield
+            :?foe = phase3
+                equipL big sword
+                equipR poison sword
+                ?foe.armor > 25
+                    equipR aether hammer
+                ?foe.state = 115 & foe.time >= 45
+                    equip mind
 
     

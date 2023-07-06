@@ -3,22 +3,20 @@ var f = import Personal/functions
 var ppTimer = 0
 
 ? loc = bronze_mine
-    f.foeStateText()
     equipR trisk
     ?foe = slave_master // Whip Controller 20/2 Fire/AEther
         equipL aether wand
-        f.quickDash("aether shield")
+        f.quickDash("big ice sword")
     :?foe = fire_elemental // 10/1 Fire/AEther
         equipL aether wand
-        f.quickDash("aether shield")
+        f.quickDash("big ice sword")
     :?foe = mine_walker | foe = dominotaur // 
         equipL aether wand
-        f.quickDash("big fire sword")
+        f.quickDash("big ice sword")
     :?foe = fire_geyser // Flame Geyser 50/0 spawns fire_elemental
         equipL aether wand
-        f.quickDash("aether hammer")
+        f.quickDash("big ice sword")
     :?foe = boss
-        f.foeStateText()
         ?foe.state = 1
             equipL aether wand
             equipR ouro
@@ -27,10 +25,13 @@ var ppTimer = 0
             equipR vigor wand
         :?foe.state = 32
             equipL aether wand
-            equipR aether shield
+            ?foe.time >15 & foe.time < 25
+                equip mind
+            :
+                equipR aether shield
         :?foe.state = 33
             equipL aether wand
-            f.quickDash("big fire sword")
+            f.quickDash("poison sword")
             ?foe.time > 180
                 equipL aether wand
                 equipR vigor wand

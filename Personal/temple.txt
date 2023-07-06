@@ -1,5 +1,3 @@
-var f = import Personal/functions
-
 /*
 Temple [temple]
 Cult Sorcerer [cult_sorcerer] 20/2
@@ -25,23 +23,24 @@ Worm Rider [worm_rider] 60/2/5.0 Poison/Ice
 Ground Serpent [ground_serpent] 30/1
 
 */
-?loc = temple
-    ? ! pickup & foe.distance > 20
-        equipL trisk
-        equipR ouro
-    :?foe = boss & foe.hp < 75
-        equipL ice big sword
-        equipR experience
-    :?foe = boss
-        f.foeStateText()
-        ?foe.state = 105 | foe.state = 33
+func run(manager)
+    ?loc = temple
+        ? ! pickup & foe.distance > 20
+            equipL trisk
+            equipR ouro
+        :?foe = boss & foe.hp < 75
             equipL ice big sword
-            equipR poison shield
-        ?foe.state = 112 & foe.time > 45
-            equipR mind
+            equipR experience
+        :?foe = boss
+            manager.foeStateText()
+            ?foe.state = 105 | foe.state = 33
+                equipL ice big sword
+                equipR poison shield
+            ?foe.state = 112 & foe.time > 45
+                equipR mind
+            :
+                equipL ice big sword
+                manager.quickDash("fire big sword")
         :
             equipL ice big sword
-            f.quickDash("fire big sword")
-    :
-        equipL ice big sword
-        f.quickDash("fire big sword")
+            manager.quickDash("fire big sword")
