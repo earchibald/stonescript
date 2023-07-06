@@ -103,10 +103,33 @@ func potionEquipped()
     :?item.potion = defensive
         potionCostA = "tar"
         potionCostB = "stone"
-    :?  item.potion = empty
+        potionItem = "Defensive"
+    :?item.potion = lightning
+        potionCostA = "bronze"
+        potionCostB = "bronze"
+        potionItem  = "Ligntning"
+    :?item.potion = berserk
+        potionCostA = "bronze"
+        potionCostB = "bronze"
+        potionItem  = "Berserk"
+    :?item.potion = lucky
+        potionCostA = "bronze"
+        potionCostB = "stone"
+        potionItem  = "Lucky"
+    :?item.potion = experience
+        potionCostA = "wood"
+        potionCostB = "wood"
+        potionItem  = "Experience"
+    :?item.potion = invisibility
+        potionCostA = "wood"
+        potionCostB = "stone"
+        potionItem  = "Invisibility"
+    :?item.potion = strength
+        potionCostA = "stone"
+        potionCostB = "stone"
+        potionItem  = "Strength"
+    ?  item.potion = empty
         potionItem = "P: Empty (was " + thePotion + ")"
-    ?string.Size(potionCostA) + string.Size(potionCostB) = 0     
-        potionItem = "P: in progress, add this potion to code"
     :
         potionItem = "P: " + potionItem + " Potion (" + potionsCanMake(potionCostA,potionCostB) + ")"
 

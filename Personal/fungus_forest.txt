@@ -2,18 +2,30 @@ func run(manager)
     ?loc = fungus_forest
         ?foe.distance < 16
             equipL poison sword
-            equipR poison heavy crossbow
-        :
-            equipL ouro
-            equipR trisk
-        ?foe = boss
+            ?hp < maxhp
+                equip wand dL
+            :
+                equipR big ice sword
+        
+        ?foe = ant | snail & foe.distance < 16
+            ?foe.distance > 8
+                equip poison staff
+            :
+                equipL big fire sword
+                equipR big ice sword
+        :?foe = boss
             equipL poison sword
             ?foe.armor > 0
-                equipR aether hammer
+                equipR *4 hammer
             :
-                equipR poison heavy crossbow
+                equipR big ice sword
             ?foe.state = 32 & foe.time > 25
                 equip mind
             :?foe.state = 33    
-                manager.quickDash("poison heavy crossbow")
-        
+                manager.quickDash("big ice sword")
+        :
+            equipL ouro
+            ?hp < maxhp
+                equipR wand DL
+            :
+                equipR trisk        
