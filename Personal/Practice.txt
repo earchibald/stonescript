@@ -1,0 +1,60 @@
+disable hud a
+
+// draw some line numbers on the left
+>`0,0,0
+>`0,1,1
+>`0,2,2
+
+var dPanel
+var dList = [ ] 
+?loc.loop
+    dList.Clear()
+
+?loc.begin | loc.loop
+    storage.Set("BOSS_STATE",0)
+    storage.Set("BOSS_LAST_STATE_TIME",0)
+    dPanel = ui.AddPanel()
+    dPanel.anchor = center_right
+    dPanel.dock = center_right
+    dPanel.visible = true
+    dPanel.w = 10
+    dPanel.h = 1
+    dPanel.color = "#red"
+
+var theAnchor = "center_left"
+var theDock = "center_left"
+
+?foe = boss
+    ?storage.Get("BOSS_STATE") ! foe.state
+        ?storage.Get("BOSS_LAST_STATE_TIME") ! 0
+            dLog(time.FormatDigital(time, true) + " Boss state: " + foe.state + " [" + (time - storage.Get("BOSS_LAST_STATE_TIME")) + "]")
+        :
+            dLog(time.FormatDigital(time, true) + " Boss state: " + foe.state)
+        storage.Set("BOSS_LAST_STATE_TIME", time)
+        storage.Set("BOSS_STATE", foe.state)
+
+>`@dPanel.absoluteX + (dPanel.w / 2) - (string.Size("BOSS STATE TRACKER") / 2)@,@dPanel.absoluteY - 1@,#red,BOSS STATE TRACKER
+
+
+func dLog(element)
+    dPanel.visible = true
+    ?dList.Count() = 20
+        dList.RemoveAt(0)
+    >`50,1,Debug List Length: @dList.Count() + 1@
+    dList.Add(element)
+    dPanel.Clear()
+    var t
+    var maxLineLength
+    maxLineLength = 0
+    for i = 0 .. dList.Count() - 1
+        t = ui.AddText(dList[i])
+        t.anchor = theAnchor
+        t.dock = theDock
+        t.w = string.Size(dList[i])
+        ?t.w > maxLineLength
+            maxLineLength = t.w
+        t.x = 1
+        t.y = dList.Count() / -2 + i + 2
+        dPanel.Add(t)
+    dPanel.h = dList.Count() + 2
+    dPanel.w = maxLineLength + 2
